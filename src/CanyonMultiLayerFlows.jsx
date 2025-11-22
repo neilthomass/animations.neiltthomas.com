@@ -12,8 +12,8 @@ const CanyonMultiLayerFlows = () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const width = canvas.width = 550;
-    const height = canvas.height = 550;
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight;
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -142,9 +142,11 @@ const CanyonMultiLayerFlows = () => {
 
   return (
     <div style={{
-      width: '550px',
-      height: '550px',
-      margin: 'auto',
+      width: '100vw',
+      height: '100vh',
+      position: 'fixed',
+      top: 0,
+      left: 0,
       backgroundColor: '#F0EEE6',
       overflow: 'hidden'
     }}>
@@ -152,8 +154,8 @@ const CanyonMultiLayerFlows = () => {
         ref={canvasRef}
         style={{
           display: 'block',
-          width: '550px',
-          height: '550px'
+          width: '100%',
+          height: '100%'
         }}
       />
     </div>

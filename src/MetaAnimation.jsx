@@ -64,11 +64,11 @@ const MetaAnimation = () => {
     const WAIT_DURATION = 3;        // 3 seconds of original animation
     const GATHER_DURATION = 16;     // 16 seconds to gather into blob (half speed = 2x duration)
     const SPIN_DURATION = 3;        // 3 seconds of accelerating spin
-    const EXPLODE_DURATION = 1.5;   // 1.5 seconds to explode outward (faster)
+    const EXPLODE_DURATION = 3.5;   // 3.5 seconds to explode outward (2 seconds longer)
     const IMPLODE_DURATION = 1;     // 1 second to reverse and collect at center (much faster)
-    const CENTER_DELAY = 0.5;       // 0.5 second pause at center (shorter)
-    const META_FORM_DURATION = 1.5; // 1.5 seconds to form Meta logo from center (really fast)
-    const BLEND_DURATION = 0.3;     // Much shorter overlap for snappier transitions
+    const CENTER_DELAY = 0.3;       // 0.3 second pause at sphere
+    const META_FORM_DURATION = 2;   // 2 seconds to form Meta logo from center (smoother)
+    const BLEND_DURATION = 0.5;     // Medium overlap for smooth transitions
     const TOTAL_ANIMATION = WAIT_DURATION + GATHER_DURATION + SPIN_DURATION + EXPLODE_DURATION + IMPLODE_DURATION + CENTER_DELAY;
 
     // Mouse tracking for particle repulsion
@@ -78,8 +78,11 @@ const MetaAnimation = () => {
 
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+      // Account for canvas scaling between display size and internal resolution
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      mouseX = (e.clientX - rect.left) * scaleX;
+      mouseY = (e.clientY - rect.top) * scaleY;
     };
 
     const handleMouseLeave = () => {
@@ -119,7 +122,7 @@ const MetaAnimation = () => {
       points.push({ x, y });
     }
 
-    // Draw the filled infinity shape
+    // Draw the stroked infinity shape (no fill in center)
     ntCtx.beginPath();
     ntCtx.moveTo(points[0].x, points[0].y);
     for (const point of points) {
@@ -127,7 +130,6 @@ const MetaAnimation = () => {
     }
     ntCtx.closePath();
     ntCtx.stroke();
-    ntCtx.fill();
 
     const imageData = ntCtx.getImageData(0, 0, 700, 700);
     const ntParticles = [];
@@ -289,8 +291,13 @@ const MetaAnimation = () => {
         implodeWeight = smoothT;
       } else if (time < centerStart) {
         implodeWeight = 1;
+      } else if (time < centerStart + BLEND_DURATION) {
+        const t = (time - centerStart) / BLEND_DURATION;
+        const smoothT = t * t * (3 - 2 * t);
+        implodeWeight = 1 - smoothT;
+        centerWeight = smoothT;
       } else if (time < metaStart) {
-        // Center phase - all particles at center
+        // Center phase - all particles at center blob
         centerWeight = 1;
       } else if (time < metaStart + META_FORM_DURATION) {
         // Transition from center to Meta logo
@@ -465,11 +472,22 @@ const MetaAnimation = () => {
           implodeZ = 0 + reverseVelZ * dt;
         }
 
-        // CENTER PHASE: All particles converge to center point
+        // CENTER PHASE: All particles gather into a static bigger ball
         if (centerWeight > 0) {
-          centerPosX = centerX;
-          centerPosY = centerY;
-          centerPosZ = 0;
+          // Use particle's original sphere position for radial distribution
+          const phi = particle.spherePhi;
+          const theta = particle.sphereTheta;
+
+          // Static sphere - half the previous size
+          const blobRadius = 60; // Half of 120
+
+          const blobX = Math.sin(phi) * Math.cos(theta) * blobRadius;
+          const blobY = Math.sin(phi) * Math.sin(theta) * blobRadius;
+          const blobZ = Math.cos(phi) * blobRadius;
+
+          centerPosX = centerX + blobX;
+          centerPosY = centerY + blobY;
+          centerPosZ = blobZ;
         }
 
         // META PHASE: All particles form Meta logo from center

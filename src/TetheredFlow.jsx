@@ -6,8 +6,8 @@ const TetheredFlow = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
+    const width = canvas.width = window.innerWidth;
+    const height = canvas.height = window.innerHeight;
 
     let time = 0;
     let animationFrame;
@@ -328,19 +328,21 @@ const TetheredFlow = () => {
 
   return (
     <div style={{
+      width: '100vw',
+      height: '100vh',
+      position: 'fixed',
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
       backgroundColor: '#F0EEE6',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      overflow: 'hidden'
     }}>
       <canvas
         ref={canvasRef}
-        width={800}
-        height={600}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%'
+        }}
       />
     </div>
   );
