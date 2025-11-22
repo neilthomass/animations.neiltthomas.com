@@ -8,8 +8,8 @@ const Dropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleMenuClick = (action) => {
-    console.log(`Menu item clicked: ${action}`);
+  const handleMenuClick = (animation) => {
+    console.log(`Selected animation: ${animation}`);
     setIsOpen(false);
   };
 
@@ -25,14 +25,14 @@ const Dropdown = () => {
 
       {isOpen && (
         <div className="dropdown-menu">
-          <button className="dropdown-item" onClick={() => handleMenuClick('about')}>
-            About
+          <button className="dropdown-item" onClick={() => handleMenuClick('tethered-flow')}>
+            Tethered Flow
           </button>
-          <button className="dropdown-item" onClick={() => handleMenuClick('settings')}>
-            Settings
+          <button className="dropdown-item" onClick={() => handleMenuClick('particle-system')}>
+            Particle System
           </button>
-          <button className="dropdown-item" onClick={() => handleMenuClick('github')}>
-            GitHub
+          <button className="dropdown-item" onClick={() => handleMenuClick('wave-motion')}>
+            Wave Motion
           </button>
         </div>
       )}
