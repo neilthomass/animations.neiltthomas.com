@@ -16,7 +16,11 @@ const Dropdown = () => {
   return (
     <div className="dropdown-container">
       <button className="dropdown-button" onClick={toggleDropdown}>
-        <span className="menu-icon">☰</span>
+        <div className="menu-icon">
+          <span className="line"></span>
+          <span className="line"></span>
+          <span className="line"></span>
+        </div>
       </button>
 
       {isOpen && (
