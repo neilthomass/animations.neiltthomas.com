@@ -58,11 +58,11 @@ const TetheredFlow = () => {
 
       draw() {
         if (this.type === 'heaven') {
-          ctx.fillStyle = `rgba(50, 50, 50, ${this.opacity})`;
+          ctx.fillStyle = `rgba(30, 30, 30, ${this.opacity + 0.2})`;
         } else if (this.type === 'earth') {
-          ctx.fillStyle = `rgba(40, 40, 40, ${this.opacity})`;
+          ctx.fillStyle = `rgba(25, 25, 25, ${this.opacity + 0.2})`;
         } else {
-          ctx.fillStyle = `rgba(20, 20, 20, ${this.opacity + 0.3})`;
+          ctx.fillStyle = `rgba(15, 15, 15, ${this.opacity + 0.4})`;
         }
 
         ctx.save();
@@ -124,8 +124,8 @@ const TetheredFlow = () => {
       }
 
       draw() {
-        ctx.strokeStyle = `rgba(30, 30, 30, ${this.opacity})`;
-        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = `rgba(20, 20, 20, ${this.opacity + 0.08})`;
+        ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.moveTo(this.points[0].x, this.points[0].y);
 
@@ -253,8 +253,8 @@ const TetheredFlow = () => {
             targetNode.y
           );
 
-          ctx.strokeStyle = `rgba(30, 30, 30, ${conn.opacity})`;
-          ctx.lineWidth = 0.5;
+          ctx.strokeStyle = `rgba(20, 20, 20, ${conn.opacity + 0.1})`;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
         }
       }
@@ -339,8 +339,8 @@ const TetheredFlow = () => {
     }}>
       <canvas
         ref={canvasRef}
-        width={800}
-        height={600}
+        width={1200}
+        height={900}
       />
     </div>
   );
